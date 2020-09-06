@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">iLock</string>
+    <string name="main_button_open_door">Open The Door</string>
+</resources>
