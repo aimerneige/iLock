@@ -5,7 +5,7 @@ import java.util.*
 
 
 /**
- * 一些用来获取时间信息的函数
+ * 用来获取系统时间信息
  */
 
 fun getDate(): String {

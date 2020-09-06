@@ -3,18 +3,13 @@ package com.aimerneige.lab.ilock.activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.security.crypto.MasterKeys
 import com.aimerneige.lab.ilock.R
 import com.aimerneige.lab.ilock.util.getHour24
 import kotlinx.android.synthetic.main.activity_main.*
-import java.security.KeyPairGenerator
 import java.util.concurrent.Executor
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +21,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /**
+         * 指纹验证相关
+         */
 
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,
@@ -61,8 +60,13 @@ class MainActivity : AppCompatActivity() {
             .setDeviceCredentialAllowed(true)
             .build()
 
+
+        /**
+         * 开门按钮的交互逻辑
+         */
+
         button_open_door.setOnClickListener {
-            if (hasKeyCheck()) {
+            if (!hasKeyCheck()) {
                 showDialogWithoutKey()
             }
             else {
@@ -77,13 +81,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun debug_toast(msg: String, length: Int) {
-        Toast.makeText(this, msg, length).show()
+    // TODO 将以下代码移动到 util 包内
+
+    /**
+     * 用于调试的 Toast
+     */
+
+    private fun debug_toast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
-    private fun generateKey() {
 
-    }
+    /**
+     * 是否生成过密钥的验证
+     */
 
     private fun hasKeyCheck(): Boolean {
         val sharedPref = getSharedPreferences("hasKeyCheck", Context.MODE_PRIVATE)
@@ -97,26 +108,10 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    private fun generatePrivateKey() {
-        val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
-        val masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
-        val kpg: KeyPairGenerator = KeyPairGenerator.getInstance(
-            KeyProperties.KEY_ALGORITHM_EC,
-            "AndroidKeyStore"
-        )
-        val parameterSpec: KeyGenParameterSpec = KeyGenParameterSpec.Builder(
-            masterKeyAlias,
-            KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
-        ).run {
-            setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
-            build()
-        }
 
-        kpg.initialize(parameterSpec)
-
-        val kp = kpg.generateKeyPair()
-    }
-
+    /**
+     * 下面的代码是各种对话框
+     */
 
     private fun showDialogWithoutKey() {
         // TODO 生成密钥，弹出对话框，提供公钥，提示用户在服务器注册账户
