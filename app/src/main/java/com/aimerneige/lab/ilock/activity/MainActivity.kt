@@ -1,26 +1,40 @@
 package com.aimerneige.lab.ilock.activity
 
+import android.app.Activity
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.aimerneige.lab.ilock.R
+import com.aimerneige.lab.ilock.util.KeyRSAUtil
 import com.aimerneige.lab.ilock.util.getHour24
 import kotlinx.android.synthetic.main.activity_main.*
+import java.security.KeyPair
+import java.security.interfaces.RSAPublicKey
 import java.util.concurrent.Executor
+
 
 class MainActivity : AppCompatActivity() {
 
+    private val KEY_ALIAS = "com_aimerneige_lab_ilock_rsa_key"
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
+    private lateinit var mContext: Context
+    private lateinit var mActivity: Activity
+    private lateinit var keyPair: KeyPair
+    private lateinit var publicKey: RSAPublicKey
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mActivity = this
+        mContext = this
 
         /**
          * 指纹验证相关
@@ -30,19 +44,22 @@ class MainActivity : AppCompatActivity() {
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
 
-                override fun onAuthenticationError(errorCode: Int,
-                                                   errString: CharSequence) {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
                     super.onAuthenticationError(errorCode, errString)
 
                     Toast.makeText(applicationContext, "认证错误: $errString", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult) {
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
                     super.onAuthenticationSucceeded(result)
+                    Toast.makeText(applicationContext, "认证成功", Toast.LENGTH_SHORT).show()
                     // TODO 发送开门请求
 
-                    Toast.makeText(applicationContext, "认证成功", Toast.LENGTH_SHORT).show()
                     showDialogSendRequest()
                 }
 
@@ -55,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("需要进行身份认证")
-            .setSubtitle("请进行身份认证以确认操作。您的操作会被记录在服务器，恶意发送开门请求可能会被暴打。")
+            .setSubtitle("请进行身份认证以确认操作。您的操作会被记录在服务器，请勿恶意发送开门请求。")
             .setConfirmationRequired(false)
             .setDeviceCredentialAllowed(true)
             .build()
@@ -110,29 +127,26 @@ class MainActivity : AppCompatActivity() {
 
 
     /**
-     * 下面的代码是各种对话框
+     * 对话框
      */
 
     private fun showDialogWithoutKey() {
         // TODO 生成密钥，弹出对话框，提供公钥，提示用户在服务器注册账户
-        // 可以在设置中重新查看公钥，但是用户无法获得私钥
 
         AlertDialog.Builder(this).apply {
             setTitle("本地不存在密钥")
             setMessage("本地不存在密钥，请点击下方生成来生成一个密钥，生成密钥后请联系管理员进行注册，在右上角设置中可再次查看")
             setCancelable(false)
             setPositiveButton("生成") { dialog, which ->
-                dialog.cancel()
-
-
-
-
-
                 // TODO 生成密钥
+
+                val rsaUtil: KeyRSAUtil = KeyRSAUtil();
+                keyPair = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
 
 
 
                 onKeyGenerated()
+                dialog.cancel()
             }
             setNegativeButton("取消") { dialog, which ->
                 dialog.cancel()
@@ -144,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogTimeError() {
         AlertDialog.Builder(this).apply {
             setTitle("深夜禁止开门")
-            setMessage("深夜请使用钥匙或一卡通开门")
+            setMessage("深夜请使用其他方式开门。您的操作会被记录在服务器，请勿恶意提交请求。")
             setCancelable(false)
             setPositiveButton("我知道了") { dialog, which ->
                 dialog.cancel()
@@ -185,4 +199,20 @@ class MainActivity : AppCompatActivity() {
             show()
         }
     }
+
+//    private fun showDialogUseTooMuch() {
+//        AlertDialog.Builder(this).apply {
+//            setTitle("当日客户端开门次数已达上限")
+//            setMessage("您今天开门次数过多了！请使用其他方式开门。您的操作会被记录在服务器，请勿恶意提交请求。")
+//            setCancelable(false)
+//            setPositiveButton("确认") { dialog, which ->
+//                dialog.cancel()
+//            }
+//            setNegativeButton("取消"){ dialog, which ->
+//                dialog.cancel()
+//            }
+//            show()
+//        }
+//    }
+
 }
