@@ -4,6 +4,7 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyGenParameterSpec.Builder
 import android.security.keystore.KeyProperties
+import android.util.Base64
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException
@@ -17,7 +18,6 @@ import javax.crypto.Cipher
 
 /**
  * 生成 RSA 密钥的工具类
- * from https://gitee.com/huangxiaoguo/androidGeZhongJiaMiZongJie
  */
 
 class KeyRSAUtil {
@@ -124,9 +124,9 @@ class KeyRSAUtil {
 
 
     /**
-     * 通过字符串生成私钥，转换服务器传递过来的私钥
+     * 通过字符串生成私钥
      */
-    fun getPrivateKey(privateKeyData: String?): PrivateKey? {
+    fun string2PrivateKey(privateKeyData: String?): PrivateKey? {
         var privateKey: PrivateKey? = null
         try {
             val decodeKey: ByteArray = Base64Decoder.decodeToBytes(privateKeyData)
@@ -141,10 +141,11 @@ class KeyRSAUtil {
         return privateKey
     }
 
+
     /**
-     * 通过字符串生成公钥，转换服务器传递过来的公钥
+     * 通过字符串生成公钥
      */
-    fun getPublicKey(publicKeyData: String?): PublicKey? {
+    fun string2PublicKey(publicKeyData: String?): PublicKey? {
         var publicKey: PublicKey? = null
         try {
             val decodeKey: ByteArray = Base64Decoder.decodeToBytes(publicKeyData)
@@ -161,13 +162,21 @@ class KeyRSAUtil {
 
 
     /**
+     * 转换公钥为字符串
+     */
+    fun publicKey2String(publicKey: PublicKey): String {
+        return Base64.encodeToString(publicKey.encoded, 2)
+    }
+
+
+    /**
      * 判断是否生成过密钥
      */
     fun isHaveKeyStore(alias: String): Boolean {
         try {
             val ks = KeyStore.getInstance("AndroidKeyStore")
             ks.load(null)
-            //从Android加载密钥对密钥存储库中
+            // 从Android加载密钥对密钥存储库中
             val entry = ks.getEntry(alias, null) ?: return false
         } catch (e: KeyStoreException) {
             e.printStackTrace()
@@ -197,8 +206,7 @@ class KeyRSAUtil {
             val ks = KeyStore.getInstance("AndroidKeyStore")
             ks.load(null)
             //从Android加载密钥对密钥存储库中
-            val entry = (ks.getEntry(alias, null) ?: return null) as? KeyStore.PrivateKeyEntry
-                ?: return null
+            val entry = (ks.getEntry(alias, null) ?: return null) as? KeyStore.PrivateKeyEntry ?: return null
             (entry as KeyStore.PrivateKeyEntry).certificate.publicKey
         } catch (e: KeyStoreException) {
             e.printStackTrace()

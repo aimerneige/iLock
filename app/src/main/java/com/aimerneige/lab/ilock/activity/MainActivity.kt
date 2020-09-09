@@ -1,6 +1,8 @@
 package com.aimerneige.lab.ilock.activity
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -12,8 +14,7 @@ import com.aimerneige.lab.ilock.R
 import com.aimerneige.lab.ilock.util.KeyRSAUtil
 import com.aimerneige.lab.ilock.util.getHour24
 import kotlinx.android.synthetic.main.activity_main.*
-import java.security.KeyPair
-import java.security.interfaces.RSAPublicKey
+import java.security.PublicKey
 import java.util.concurrent.Executor
 
 
@@ -26,8 +27,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
-    private lateinit var keyPair: KeyPair
-    private lateinit var publicKey: RSAPublicKey
+    private lateinit var publicKey: PublicKey
+
+    private val rsaUtil: KeyRSAUtil = KeyRSAUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     super.onAuthenticationError(errorCode, errString)
 
-                    Toast.makeText(applicationContext, "认证错误: $errString", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "认证错误: $errString", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 override fun onAuthenticationSucceeded(
@@ -83,14 +86,17 @@ class MainActivity : AppCompatActivity() {
          */
 
         button_open_door.setOnClickListener {
-            if (!hasKeyCheck()) {
+            if (!rsaUtil.isHaveKeyStore(KEY_ALIAS)) {
+                // 本地不存在密钥，提示用户生成密钥
                 showDialogWithoutKey()
             }
             else {
                 if (getHour24() >= 23 || getHour24() <= 4) {
+                    // 检查时间是否合法
                     showDialogTimeError()
                 }
                 else {
+                    // 通过指纹验证确认操作
                     biometricPrompt.authenticate(promptInfo)
                 }
             }
@@ -98,30 +104,47 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // TODO 将以下代码移动到 util 包内
 
     /**
      * 用于调试的 Toast
      */
-
     private fun debug_toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
-
     /**
-     * 是否生成过密钥的验证
+     * 生成密钥
      */
-
-    private fun hasKeyCheck(): Boolean {
-        val sharedPref = getSharedPreferences("hasKeyCheck", Context.MODE_PRIVATE)
-        return sharedPref.getBoolean("hasKey", false)
+    private fun genKey() {
+        val kp = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
+        publicKey = kp.public
+        // 保存在sp
+        showDialogKeyGenerated(rsaUtil.publicKey2String(publicKey))
     }
 
-    private fun onKeyGenerated() {
-        val sharedPref = getSharedPreferences("hasKeyCheck", Context.MODE_PRIVATE)
+
+    /**
+     * 复制内容到剪贴板
+     */
+    private fun paste2ClipBoard(lable: String, data: String) {
+        val clipData: ClipData = ClipData.newPlainText(lable, data)
+        val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(clipData)
+    }
+
+
+    /**
+     * 公钥的保存和读取
+     */
+    private fun getPublicKeyData2SharedPreferences(): String? {
+        val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
+        return sharedPref.getString("public_key", "__EMPTY_KEY_VALUE__")
+    }
+
+    private fun savePublicKeyData2SharedPreferences(publicKeyData: String) {
+        val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putBoolean("hasKey", true)
+        editor.putString("public_key", publicKeyData)
         editor.apply()
     }
 
@@ -129,23 +152,33 @@ class MainActivity : AppCompatActivity() {
     /**
      * 对话框
      */
-
     private fun showDialogWithoutKey() {
-        // TODO 生成密钥，弹出对话框，提供公钥，提示用户在服务器注册账户
-
         AlertDialog.Builder(this).apply {
             setTitle("本地不存在密钥")
-            setMessage("本地不存在密钥，请点击下方生成来生成一个密钥，生成密钥后请联系管理员进行注册，在右上角设置中可再次查看")
+            setMessage("本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册，在右上角设置中可再次查看。\n" +
+                    "生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的CPU。")
             setCancelable(false)
             setPositiveButton("生成") { dialog, which ->
-                // TODO 生成密钥
+                genKey()
+                dialog.cancel()
+            }
+            setNegativeButton("取消") { dialog, which ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
 
-                val rsaUtil: KeyRSAUtil = KeyRSAUtil();
-                keyPair = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
-
-
-
-                onKeyGenerated()
+    private fun showDialogKeyGenerated(keyData: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle("生成密钥成功")
+            setMessage("生成密钥成功！请复制密钥后联系管理员在服务器注册密钥信息。\n" +
+                    keyData + "\n" +
+                    "密钥有效期为6个月，到期请重新注册。"
+            )
+            setCancelable(false)
+            setPositiveButton("复制") { dialog, which ->
+                paste2ClipBoard("Key", keyData)
                 dialog.cancel()
             }
             setNegativeButton("取消") { dialog, which ->
@@ -173,7 +206,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogSendRequest() {
         AlertDialog.Builder(this).apply {
             setTitle("已发送开门请求")
-            setMessage("已经向服务器发送了开门请求，您的操作会被记录在服务器，请勿重复提交请求。如果门没有开，请确认您的密钥是否被登记。")
+            setMessage("已经向服务器发送了开门请求，您的操作会被记录在服务器，请勿重复提交请求。如果门没有开，请确认您的密钥是否被登记或联系管理员。")
             setCancelable(false)
             setPositiveButton("我知道了") { dialog, which ->
                 dialog.cancel()
@@ -188,7 +221,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogSendRequestFailed() {
         AlertDialog.Builder(this).apply {
             setTitle("发送开门请求失败")
-            setMessage("发送开门请求失败，请检查您的网络设置。")
+            setMessage("发送开门请求失败，请检查您的网络设置或者联系管理员。")
             setCancelable(false)
             setPositiveButton("确认") { dialog, which ->
                 dialog.cancel()
