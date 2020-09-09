@@ -5,7 +5,7 @@
     <color name="colorPrimary">#00BCD4</color>
     <color name="colorPrimaryDark">#026470</color>
     <color name="colorAccent">#9C27B0</color>
-    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorPrimary">#000000</color>
 
     <!-- Common -->
     <color name="white">#FFFFFF</color>
