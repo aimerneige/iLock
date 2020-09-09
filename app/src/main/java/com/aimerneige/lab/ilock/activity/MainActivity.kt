@@ -4,7 +4,11 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -29,11 +33,33 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mActivity: Activity
     private lateinit var publicKey: PublicKey
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        return super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return super.onOptionsItemSelected(item)
+
+        fun callSettingsActivity() {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+        when (item.itemId) {
+            R.id.toolbar_settings -> callSettingsActivity()
+        }
+        return true
+    }
+
     private val rsaUtil: KeyRSAUtil = KeyRSAUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
         mActivity = this
         mContext = this
@@ -112,14 +138,16 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
+
     /**
      * 生成密钥
      */
     private fun genKey() {
         val kp = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
         publicKey = kp.public
-        // 保存在sp
-        showDialogKeyGenerated(rsaUtil.publicKey2String(publicKey))
+        val publicKeyStringData: String = rsaUtil.publicKey2String(publicKey)
+        savePublicKeyData2SharedPreferences(publicKeyStringData)
+        showDialogKeyGenerated(publicKeyStringData)
     }
 
 
@@ -130,17 +158,22 @@ class MainActivity : AppCompatActivity() {
         val clipData: ClipData = ClipData.newPlainText(lable, data)
         val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(clipData)
+        Toast.makeText(this, "已将公钥复制到剪切板", Toast.LENGTH_SHORT).show()
     }
 
 
     /**
-     * 公钥的保存和读取
+     * 公钥的读取
      */
     private fun getPublicKeyData2SharedPreferences(): String? {
         val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
         return sharedPref.getString("public_key", "__EMPTY_KEY_VALUE__")
     }
 
+
+    /**
+     * 公钥的保存
+     */
     private fun savePublicKeyData2SharedPreferences(publicKeyData: String) {
         val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
@@ -155,7 +188,8 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogWithoutKey() {
         AlertDialog.Builder(this).apply {
             setTitle("本地不存在密钥")
-            setMessage("本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册，在右上角设置中可再次查看。\n" +
+            setMessage("本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册。" +
+                    "在右上角设置中可再次查看密钥。\n" +
                     "生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的CPU。")
             setCancelable(false)
             setPositiveButton("生成") { dialog, which ->

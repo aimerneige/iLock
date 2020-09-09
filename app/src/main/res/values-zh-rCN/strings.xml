@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">智能门锁</string>
     <string name="main_button_open_door">开门</string>
+    <string name="settings">设置</string>
 </resources>
