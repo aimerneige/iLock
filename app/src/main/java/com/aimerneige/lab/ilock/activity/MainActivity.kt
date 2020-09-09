@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             setTitle("本地不存在密钥")
             setMessage("本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册。" +
                     "在右上角设置中可再次查看密钥。\n" +
-                    "生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的CPU。")
+                    "生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的手机配置。")
             setCancelable(false)
             setPositiveButton("生成") { dialog, which ->
                 genKey()

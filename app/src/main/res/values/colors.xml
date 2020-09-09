@@ -2,10 +2,16 @@
 <resources>
 
     <!--default style color-->
-    <color name="colorPrimary">#00BCD4</color>
-    <color name="colorPrimaryDark">#026470</color>
-    <color name="colorAccent">#9C27B0</color>
+    <color name="colorPrimary">#5DAC81</color>
+    <color name="colorPrimaryDark">#294B38</color>
+    <color name="colorAccent">#0D5661</color>
     <color name="textColorPrimary">#000000</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#5DAC81</color>
+
+    <!-- button color -->
+    <color name="button_color">#5DAC81</color>
+    <color name="button_shadow">#294B38</color>
 
     <!-- Common -->
     <color name="white">#FFFFFF</color>

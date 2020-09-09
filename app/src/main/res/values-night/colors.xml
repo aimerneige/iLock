@@ -2,9 +2,15 @@
 <resources>
 
     <!--default style color-->
-    <color name="colorPrimary">#898989</color>
+    <color name="colorPrimary">#121212</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#F4F4F4</color>
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#000000</color>
+    <color name="navigationBarColor">#121212</color>
+
+    <!-- button color -->
+    <color name="button_color">#434343</color>
+    <color name="button_shadow">#A4A4A4</color>
 
 </resources>
