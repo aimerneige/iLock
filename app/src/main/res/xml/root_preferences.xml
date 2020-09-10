@@ -1,0 +1,50 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:title="Soft">
+
+        <Preference
+            app:title="Public Key"
+            android:summary="Click to get the Public Key." />
+
+        <Preference
+            app:title="Feed Back"
+            android:summary="Report bug or suggestion on GitHub Issue.">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/AimerNeige/iLock/issues" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="About">
+
+        <Preference
+            app:title="Author"
+            android:icon="@drawable/profile_128"
+            android:summary="Follow me on GitHub!">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/AimerNeige/" />
+
+        </Preference>
+
+        <Preference
+            app:title="Open Source"
+            android:icon="@drawable/github_logo_64px"
+            android:summary="Get the source code on GitHub.">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/AimerNeige/iLock/" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
