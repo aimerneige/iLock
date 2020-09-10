@@ -27,12 +27,3 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
-
-// Basic
-// 公钥
-
-// 反馈
-
-// About
-// 作者
-// 开源地址
