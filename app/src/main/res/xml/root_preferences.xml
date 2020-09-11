@@ -5,10 +5,12 @@
         app:title="Soft">
 
         <Preference
+            app:key="public_key"
             app:title="Public Key"
             android:summary="Click to get the Public Key." />
 
         <Preference
+            app:key="feed_back"
             app:title="Feed Back"
             android:summary="Report bug or suggestion on GitHub Issue.">
 
@@ -24,6 +26,7 @@
         app:title="About">
 
         <Preference
+            app:key="author"
             app:title="Author"
             android:icon="@drawable/profile_128"
             android:summary="Follow me on GitHub!">
@@ -35,6 +38,7 @@
         </Preference>
 
         <Preference
+            app:key="open_source"
             app:title="Open Source"
             android:icon="@drawable/github_logo_64px"
             android:summary="Get the source code on GitHub.">

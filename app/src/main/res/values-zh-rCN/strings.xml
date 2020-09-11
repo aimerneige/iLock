@@ -3,4 +3,21 @@
     <string name="app_name">智能门锁</string>
     <string name="main_button_open_door">开门</string>
     <string name="settings">设置</string>
+    <string name="dialog_send_request_failed_title">发送开门请求失败</string>
+    <string name="dialog_send_request_failed_message">发送开门请求失败，请检查您的网络设置或者联系管理员。</string>
+    <string name="dialog_ok">确认</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_exit">退出</string>
+    <string name="dialog_i_know">我知道了</string>
+    <string name="dialog_send_request_title">已发送开门请求</string>
+    <string name="dialog_send_request_message">已经向服务器发送了开门请求，您的操作会被记录在服务器，请勿重复提交请求。如果门没有开，请确认您的密钥是否被登记或联系管理员。</string>
+    <string name="dialog_copy">复制</string>
+    <string name="dialog_generated">生成</string>
+    <string name="dialog_time_error_title">深夜禁止开门</string>
+    <string name="dialog_time_error_message">深夜请使用其他方式开门。您的操作会被记录在服务器，请勿恶意提交请求。</string>
+    <string name="dialog_without_key_title">本地不存在密钥</string>
+    <string name="dialog_without_key_message">本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册。在右上角设置中可再次查看密钥。生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的手机配置。</string>
+    <string name="dialog_key_generated_title">生成密钥成功</string>
+    <string name="dialog_key_generated_message_part1">生成密钥成功！请复制密钥后联系管理员在服务器注册密钥信息。</string>
+    <string name="dialog_key_generated_message_part2">密钥有效期为6个月，到期请重新注册。</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.aimerneige.lab.ilock.activity
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -16,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.aimerneige.lab.ilock.R
 import com.aimerneige.lab.ilock.util.KeyRSAUtil
 import com.aimerneige.lab.ilock.util.getHour24
+import com.aimerneige.lab.ilock.util.paste2ClipBoard
 import kotlinx.android.synthetic.main.activity_main.*
 import java.security.PublicKey
 import java.util.concurrent.Executor
@@ -145,26 +144,15 @@ class MainActivity : AppCompatActivity() {
         val kp = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
         publicKey = kp.public
         val publicKeyStringData: String = rsaUtil.publicKey2String(publicKey)
-        savePublicKeyData2SharedPreferences(publicKeyStringData)
+        savePublicKeyDataToSharedPreferences(publicKeyStringData)
         showDialogKeyGenerated(publicKeyStringData)
-    }
-
-
-    /**
-     * 复制内容到剪贴板
-     */
-    private fun paste2ClipBoard(lable: String, data: String) {
-        val clipData: ClipData = ClipData.newPlainText(lable, data)
-        val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(clipData)
-        Toast.makeText(this, "已将公钥复制到剪切板", Toast.LENGTH_SHORT).show()
     }
 
 
     /**
      * 公钥的读取
      */
-    private fun getPublicKeyData2SharedPreferences(): String? {
+    private fun getPublicKeyDataFromSharedPreferences(): String? {
         val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
         return sharedPref.getString("public_key", "__EMPTY_KEY_VALUE__")
     }
@@ -173,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 公钥的保存
      */
-    private fun savePublicKeyData2SharedPreferences(publicKeyData: String) {
+    private fun savePublicKeyDataToSharedPreferences(publicKeyData: String) {
         val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         editor.putString("public_key", publicKeyData)
@@ -186,16 +174,14 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showDialogWithoutKey() {
         AlertDialog.Builder(this).apply {
-            setTitle("本地不存在密钥")
-            setMessage("本地不存在密钥，请点击下方“生成”来生成一个密钥，生成密钥后请联系管理员进行注册。" +
-                    "在右上角设置中可再次查看密钥。\n" +
-                    "生成密钥需要一定时间，软件并没有卡住，具体时间取决于你的手机配置。")
+            setTitle(getString(R.string.dialog_without_key_title))
+            setMessage(getString(R.string.dialog_without_key_message))
             setCancelable(false)
-            setPositiveButton("生成") { dialog, which ->
+            setPositiveButton(getString(R.string.dialog_generated)) { dialog, which ->
                 genKey()
                 dialog.cancel()
             }
-            setNegativeButton("取消") { dialog, which ->
+            setNegativeButton(R.string.dialog_cancel) { dialog, which ->
                 dialog.cancel()
             }
             show()
@@ -204,17 +190,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialogKeyGenerated(keyData: String) {
         AlertDialog.Builder(this).apply {
-            setTitle("生成密钥成功")
-            setMessage("生成密钥成功！请复制密钥后联系管理员在服务器注册密钥信息。\n" +
+            setTitle(getString(R.string.dialog_key_generated_title))
+            setMessage(getString(R.string.dialog_key_generated_message_part1) + "\n" +
                     keyData + "\n" +
-                    "密钥有效期为6个月，到期请重新注册。"
+                    getString(R.string.dialog_key_generated_message_part2)
             )
             setCancelable(false)
-            setPositiveButton("复制") { dialog, which ->
-                paste2ClipBoard("Key", keyData)
+            setPositiveButton(getString(R.string.dialog_copy)) { dialog, which ->
+                paste2ClipBoard("Key", keyData, mContext)
                 dialog.cancel()
             }
-            setNegativeButton("取消") { dialog, which ->
+            setNegativeButton(R.string.dialog_cancel) { dialog, which ->
                 dialog.cancel()
             }
             show()
@@ -223,13 +209,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialogTimeError() {
         AlertDialog.Builder(this).apply {
-            setTitle("深夜禁止开门")
-            setMessage("深夜请使用其他方式开门。您的操作会被记录在服务器，请勿恶意提交请求。")
+            setTitle(getString(R.string.dialog_time_error_title))
+            setMessage(getString(R.string.dialog_time_error_message))
             setCancelable(false)
-            setPositiveButton("我知道了") { dialog, which ->
+            setPositiveButton(R.string.dialog_i_know) { dialog, which ->
                 dialog.cancel()
             }
-            setNegativeButton("退出") { dialog, which ->
+            setNegativeButton(R.string.dialog_exit) { dialog, which ->
                 finish()
             }
             show()
@@ -238,13 +224,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialogSendRequest() {
         AlertDialog.Builder(this).apply {
-            setTitle("已发送开门请求")
-            setMessage("已经向服务器发送了开门请求，您的操作会被记录在服务器，请勿重复提交请求。如果门没有开，请确认您的密钥是否被登记或联系管理员。")
+            setTitle(getString(R.string.dialog_send_request_title))
+            setMessage(getString(R.string.dialog_send_request_message))
             setCancelable(false)
-            setPositiveButton("我知道了") { dialog, which ->
+            setPositiveButton(getString(R.string.dialog_i_know)) { dialog, which ->
                 dialog.cancel()
             }
-            setNegativeButton("退出") { dialog, which ->
+            setNegativeButton(getString(R.string.dialog_exit)) { dialog, which ->
                 finish()
             }
             show()
@@ -253,32 +239,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialogSendRequestFailed() {
         AlertDialog.Builder(this).apply {
-            setTitle("发送开门请求失败")
-            setMessage("发送开门请求失败，请检查您的网络设置或者联系管理员。")
+            setTitle(getString(R.string.dialog_send_request_failed_title))
+            setMessage(getString(R.string.dialog_send_request_failed_message))
             setCancelable(false)
-            setPositiveButton("确认") { dialog, which ->
+            setPositiveButton(getString(R.string.dialog_ok)) { dialog, which ->
                 dialog.cancel()
             }
-            setNegativeButton("取消"){ dialog, which ->
+            setNegativeButton(getString(R.string.dialog_cancel)){ dialog, which ->
                 dialog.cancel()
             }
             show()
         }
     }
-
-//    private fun showDialogUseTooMuch() {
-//        AlertDialog.Builder(this).apply {
-//            setTitle("当日客户端开门次数已达上限")
-//            setMessage("您今天开门次数过多了！请使用其他方式开门。您的操作会被记录在服务器，请勿恶意提交请求。")
-//            setCancelable(false)
-//            setPositiveButton("确认") { dialog, which ->
-//                dialog.cancel()
-//            }
-//            setNegativeButton("取消"){ dialog, which ->
-//                dialog.cancel()
-//            }
-//            show()
-//        }
-//    }
-
 }
