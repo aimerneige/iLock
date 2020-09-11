@@ -22,5 +22,18 @@
     <string name="dialog_publickey_title">Public key information</string>
     <string name="biometric_prompt_title">Need to be authenticated</string>
     <string name="biometric_prompt_message">Please verify your identity to confirm the operation. Your actions will be recorded on the server, please do not send the door open request maliciously.</string>
-
+    <string name="dialog_no_public_key_found_title">No public key found</string>
+    <string name="dialog_no_public_key_found_message">No public key is found in the device, please return to the main interface and click \"Open The Door\" to generate a key.</string>
+    <string name="read_public_key_failed">Read PublicKey Failed.</string>
+    <string name="public_key_copy_success">The public key has been copied to the clipboard</string>
+    <string name="settings_public_key_title">Public Key</string>
+    <string name="settings_public_key_summary">Click to get the Public Key.</string>
+    <string name="settings_feed_back_title">Feed Back</string>
+    <string name="settings_feed_back_summary">Report bug or suggestion on GitHub Issue.</string>
+    <string name="settings_author_title">Author</string>
+    <string name="settings_author_summary">Follow me on GitHub!</string>
+    <string name="settings_open_source_title">Open Source</string>
+    <string name="settings_open_source_summary">Get the source code on GitHub.</string>
+    <string name="settings_software">Software</string>
+    <string name="settings_about">About</string>
 </resources>

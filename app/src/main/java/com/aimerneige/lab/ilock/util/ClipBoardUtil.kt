@@ -12,5 +12,4 @@ fun paste2ClipBoard(lable: String, data: String, context: Context) {
     val clipData: ClipData = ClipData.newPlainText(lable, data)
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboard.setPrimaryClip(clipData)
-    Toast.makeText(context, "已将公钥复制到剪切板", Toast.LENGTH_SHORT).show()
 }

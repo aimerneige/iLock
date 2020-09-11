@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mActivity: Activity
     private lateinit var publicKey: PublicKey
 
+    private val rsaUtil: KeyRSAUtil = KeyRSAUtil()
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar, menu)
@@ -49,8 +51,6 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-
-    private val rsaUtil: KeyRSAUtil = KeyRSAUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,28 +141,7 @@ class MainActivity : AppCompatActivity() {
         val kp = rsaUtil.generateRSAKeyPair(mContext, KEY_ALIAS)
         publicKey = kp.public
         val publicKeyStringData: String = rsaUtil.publicKey2String(publicKey)
-        savePublicKeyDataToSharedPreferences(publicKeyStringData)
         showDialogKeyGenerated(publicKeyStringData)
-    }
-
-
-    /**
-     * 公钥的读取
-     */
-    private fun getPublicKeyDataFromSharedPreferences(): String? {
-        val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
-        return sharedPref.getString("public_key", "__EMPTY_KEY_VALUE__")
-    }
-
-
-    /**
-     * 公钥的保存
-     */
-    private fun savePublicKeyDataToSharedPreferences(publicKeyData: String) {
-        val sharedPref = getSharedPreferences("key", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putString("public_key", publicKeyData)
-        editor.apply()
     }
 
 
@@ -195,6 +174,7 @@ class MainActivity : AppCompatActivity() {
             setCancelable(false)
             setPositiveButton(getString(R.string.dialog_copy)) { dialog, which ->
                 paste2ClipBoard("Key", keyData, mContext)
+                Toast.makeText(mContext, R.string.public_key_copy_success, Toast.LENGTH_SHORT).show()
                 dialog.cancel()
             }
             setNegativeButton(R.string.dialog_cancel) { dialog, which ->

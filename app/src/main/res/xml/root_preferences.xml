@@ -2,17 +2,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        app:title="Soft">
+        app:title="@string/settings_software">
 
         <Preference
             app:key="public_key"
-            app:title="Public Key"
-            android:summary="Click to get the Public Key." />
+            app:title="@string/settings_public_key_title"
+            android:summary="@string/settings_public_key_summary" />
 
         <Preference
             app:key="feed_back"
-            app:title="Feed Back"
-            android:summary="Report bug or suggestion on GitHub Issue.">
+            app:title="@string/settings_feed_back_title"
+            android:summary="@string/settings_feed_back_summary">
 
             <intent
                 android:action="android.intent.action.VIEW"
@@ -23,13 +23,13 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:title="About">
+        app:title="@string/settings_about">
 
         <Preference
             app:key="author"
-            app:title="Author"
+            app:title="@string/settings_author_title"
             android:icon="@drawable/profile_128"
-            android:summary="Follow me on GitHub!">
+            android:summary="@string/settings_author_summary">
 
             <intent
                 android:action="android.intent.action.VIEW"
@@ -39,9 +39,9 @@
 
         <Preference
             app:key="open_source"
-            app:title="Open Source"
+            app:title="@string/settings_open_source_title"
             android:icon="@drawable/github_logo_64px"
-            android:summary="Get the source code on GitHub.">
+            android:summary="@string/settings_open_source_summary">
 
             <intent
                 android:action="android.intent.action.VIEW"
