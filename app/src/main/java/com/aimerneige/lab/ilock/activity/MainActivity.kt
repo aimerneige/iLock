@@ -33,13 +33,11 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        return super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.toolbar, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return super.onOptionsItemSelected(item)
 
         fun callSettingsActivity() {
             val intent = Intent(this, SettingsActivity::class.java)
@@ -65,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         /**
          * 指纹验证相关
          */
-
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
@@ -76,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     super.onAuthenticationError(errorCode, errString)
 
-                    Toast.makeText(applicationContext, "认证错误: $errString", Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, "Error: $errString", Toast.LENGTH_SHORT)
                         .show()
                 }
 
@@ -84,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    Toast.makeText(applicationContext, "认证成功", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT).show()
                     // TODO 发送开门请求
 
                     showDialogSendRequest()
@@ -93,13 +90,13 @@ class MainActivity : AppCompatActivity() {
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
 
-                    Toast.makeText(applicationContext, "认证失败", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Failed", Toast.LENGTH_SHORT).show()
                 }
             })
 
         promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("需要进行身份认证")
-            .setSubtitle("请进行身份认证以确认操作。您的操作会被记录在服务器，请勿恶意发送开门请求。")
+            .setTitle(getString(R.string.biometric_prompt_title))
+            .setSubtitle(getString(R.string.biometric_prompt_message))
             .setConfirmationRequired(false)
             .setDeviceCredentialAllowed(true)
             .build()

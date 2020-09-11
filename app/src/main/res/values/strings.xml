@@ -2,22 +2,25 @@
     <string name="app_name">iLock</string>
     <string name="main_button_open_door">Open The Door</string>
     <string name="settings">Settings</string>
-    <string name="dialog_send_request_failed_title">Send request failed.</string>
-    <string name="dialog_send_request_failed_message">Send request failed, please check your Internet connection or connected with admin.</string>
+    <string name="dialog_send_request_failed_title">Failed to send door open request</string>
+    <string name="dialog_send_request_failed_message">Sending the door opening request failed, please check your network settings or contact the administrator.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_i_know">I know</string>
     <string name="dialog_exit">Exit</string>
-    <string name="dialog_send_request_title">Have send request</string>
-    <string name="dialog_send_request_message">The request has been send. Your operation will be recorded on server, don\'t send again. If the door does not open, please make sure that your public key has been record on server or you can also connected with admin.</string>
+    <string name="dialog_send_request_title">Door open request sent</string>
+    <string name="dialog_send_request_message">A door opening request has been sent to the server, and your operation will be recorded on the server. Please do not submit the request repeatedly. If the door does not open, please confirm whether your key is registered or contact the administrator.</string>
     <string name="dialog_copy">Copy</string>
     <string name="dialog_generated">Generated</string>
     <string name="dialog_time_error_title">Forbidden operation on midnight</string>
-    <string name="dialog_time_error_message">Please use other way to open the door when it is midnight. Your operation will be recorded on server, please do not send malicious request.</string>
+    <string name="dialog_time_error_message">Please use other methods to open the door midnight. Your actions will be recorded on the server, please do not submit requests maliciously.</string>
     <string name="dialog_without_key_title">Public key not found</string>
-    <string name="dialog_without_key_message">Can\'t find the public key on local. Please click Generated bellow to generated a key pair. After generated the public key, please connected with admin and record your public key on server. You can get the key on settings again. The software looks like crashed, but it needs long time to generated a key pair which depend your phone.</string>
+    <string name="dialog_without_key_message">There is no key locally. Please click \"Generate\" below to generate a key. After generating the key, please contact the administrator to register. You can view the key again in the settings in the upper right corner. It takes a certain amount of time to generate the key, and the software is not stuck. The specific time depends on your mobile phone configuration.</string>
     <string name="dialog_key_generated_title">Generated success</string>
     <string name="dialog_key_generated_message_part1">Generated success! Please copy the public key and recorded it on server.</string>
     <string name="dialog_key_generated_message_part2">The key is valid for 6 months, please re-register after expiration.</string>
+    <string name="dialog_publickey_title">Public key information</string>
+    <string name="biometric_prompt_title">Need to be authenticated</string>
+    <string name="biometric_prompt_message">Please verify your identity to confirm the operation. Your actions will be recorded on the server, please do not send the door open request maliciously.</string>
 
 </resources>

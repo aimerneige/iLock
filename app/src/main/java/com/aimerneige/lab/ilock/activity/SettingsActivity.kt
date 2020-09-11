@@ -20,17 +20,6 @@ class SettingsActivity : AppCompatActivity() {
             .commit()
 //        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        val myPref = findPreference("myKey") as Preference
-//        myPref.setOnPreferenceClickListener(object : OnPreferenceClickListener() {
-//            fun onPreferenceClick(preference: Preference?): Boolean {
-//                //open browser or intent here
-//                return true
-//            }
-//        })
-
-
-
-
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
@@ -76,28 +65,26 @@ class SettingsActivity : AppCompatActivity() {
                 setTitle("未发现公钥")
                 setMessage("在设备内未发现公钥，请返回主界面点击开门生成一个密钥。")
                 setCancelable(false)
-                setPositiveButton("") { dialog, which ->
-
+                setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                    dialog.cancel()
                 }
-                setNegativeButton("") { dialog, which ->
-
+                setNegativeButton(R.string.dialog_cancel) { dialog, which ->
+                    dialog.cancel()
                 }
                 show()
             }
         }
 
         private fun showDialogPublicKey(publicKeyStringData: String) {
-//            val sharedPref = requireActivity().getSharedPreferences("key", Context.MODE_PRIVATE)
-//            val publicKeyStringData: String = sharedPref.getString("public_key", "__EMPTY_KEY_VALUE__").toString()
             AlertDialog.Builder(requireActivity()).apply {
-                setTitle("公钥信息")
+                setTitle(getString(R.string.dialog_publickey_title))
                 setMessage(publicKeyStringData)
                 setCancelable(false)
-                setPositiveButton("复制") { dialog, which ->
+                setPositiveButton(R.string.dialog_copy) { dialog, which ->
                     paste2ClipBoard("Key", publicKeyStringData, requireContext())
                     dialog.cancel()
                 }
-                setNegativeButton("取消") { dialog, which ->
+                setNegativeButton(R.string.dialog_cancel) { dialog, which ->
                     dialog.cancel()
                 }
                 show()

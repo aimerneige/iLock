@@ -20,4 +20,7 @@
     <string name="dialog_key_generated_title">生成密钥成功</string>
     <string name="dialog_key_generated_message_part1">生成密钥成功！请复制密钥后联系管理员在服务器注册密钥信息。</string>
     <string name="dialog_key_generated_message_part2">密钥有效期为6个月，到期请重新注册。</string>
+    <string name="dialog_publickey_title">公钥信息</string>
+    <string name="biometric_prompt_title">需要进行身份认证</string>
+    <string name="biometric_prompt_message">请进行身份认证以确认操作。您的操作会被记录在服务器，请勿恶意发送开门请求。</string>
 </resources>
