@@ -32,7 +32,12 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             findPreference<Preference>("public_key")?.setOnPreferenceClickListener {
-                showDialogPublicKey(getPublicKeyData())
+                if (rsaUtil.isHaveKeyStore(KEY_ALIAS)) {
+                    showDialogPublicKey(getPublicKeyData())
+                }
+                else {
+                    showDialogNoPublicKeyFound()
+                }
                 true
             }
         }
