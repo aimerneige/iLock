@@ -37,4 +37,7 @@
     <string name="settings_open_source_summary">GitHub开源地址</string>
     <string name="settings_software">软件</string>
     <string name="settings_about">关于</string>
+    <string name="biometric_prompt_failed">失败</string>
+    <string name="biometric_prompt_success">成功</string>
+    <string name="biometric_prompt_error">错误：</string>
 </resources>
