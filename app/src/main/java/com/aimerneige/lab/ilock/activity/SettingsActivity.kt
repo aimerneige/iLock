@@ -57,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
             AlertDialog.Builder(requireActivity()).apply {
                 setTitle(getString(R.string.dialog_no_public_key_found_title))
                 setMessage(getString(R.string.dialog_no_public_key_found_message))
-                setCancelable(false)
+                setCancelable(true)
                 setPositiveButton(R.string.dialog_ok) { dialog, which ->
                     dialog.cancel()
                 }
@@ -73,7 +73,7 @@ class SettingsActivity : AppCompatActivity() {
             AlertDialog.Builder(requireActivity()).apply {
                 setTitle(getString(R.string.dialog_publickey_title))
                 setMessage(publicKeyStringData)
-                setCancelable(false)
+                setCancelable(true)
                 setPositiveButton(R.string.dialog_copy) { dialog, which ->
                     paste2ClipBoard("Key", publicKeyStringData, requireContext())
                     Toast.makeText(context, getString(R.string.public_key_copy_success), Toast.LENGTH_SHORT).show()
