@@ -122,7 +122,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
 
@@ -167,8 +166,8 @@ class MainActivity : AppCompatActivity() {
     private fun showDialogKeyGenerated(keyData: String) {
         AlertDialog.Builder(this).apply {
             setTitle(getString(R.string.dialog_key_generated_title))
-            setMessage(getString(R.string.dialog_key_generated_message_part1) + "\n" +
-                    keyData + "\n" +
+            setMessage(getString(R.string.dialog_key_generated_message_part1) + "\n==========\n" +
+                    keyData + "\n==========\n" +
                     getString(R.string.dialog_key_generated_message_part2)
             )
             setCancelable(false)
