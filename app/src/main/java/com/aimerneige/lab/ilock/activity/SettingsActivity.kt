@@ -1,6 +1,6 @@
 package com.aimerneige.lab.ilock.activity
 
-import android.content.Context
+
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
