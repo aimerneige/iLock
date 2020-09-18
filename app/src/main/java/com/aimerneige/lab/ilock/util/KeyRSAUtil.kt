@@ -22,7 +22,7 @@ import javax.crypto.Cipher
 class KeyRSAUtil {
 
     val ECB_PKCS1_PADDING = "RSA/ECB/PKCS1Padding"
-    val DEFAULT_KEY_SIZE = 4096
+    val DEFAULT_KEY_SIZE = 2048
 
     /**
      * 生成密钥对，并将其保存在 AndroidKeyStore 中

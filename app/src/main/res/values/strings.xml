@@ -39,4 +39,8 @@
     <string name="biometric_prompt_failed">Failed</string>
     <string name="biometric_prompt_success">Success</string>
     <string name="biometric_prompt_error">Error:</string>
+    <string name="settings_server_ip_title">Server IP</string>
+    <string name="settings_server_ip_summary">Enter the server IP here.</string>
+    <string name="settings_user_id_title">User ID</string>
+    <string name="settings_user_id_summary">Put your user id here provided by administrator.</string>
 </resources>

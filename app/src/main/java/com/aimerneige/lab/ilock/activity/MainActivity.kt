@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.aimerneige.lab.ilock.R
+import com.aimerneige.lab.ilock.net.sendRequest
 import com.aimerneige.lab.ilock.util.KeyRSAUtil
 import com.aimerneige.lab.ilock.util.getHour24
 import com.aimerneige.lab.ilock.util.paste2ClipBoard
@@ -82,8 +83,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     super.onAuthenticationSucceeded(result)
                     Toast.makeText(applicationContext, getString(R.string.biometric_prompt_success), Toast.LENGTH_SHORT).show()
-                    // TODO 发送开门请求
-
+                    sendRequest()
                     showDialogSendRequest()
                 }
 

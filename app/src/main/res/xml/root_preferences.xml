@@ -9,9 +9,25 @@
             app:title="@string/settings_public_key_title"
             android:summary="@string/settings_public_key_summary" />
 
+        <EditTextPreference
+            app:key="server_ip"
+            app:title="@string/settings_server_ip_title"
+            android:summary="@string/settings_server_ip_summary" />
+
+        <EditTextPreference
+            app:key="user_id"
+            app:title="@string/settings_user_id_title"
+            android:summary="@string/settings_user_id_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/settings_about">
+
         <Preference
             app:key="feed_back"
             app:title="@string/settings_feed_back_title"
+            android:icon="@drawable/ic_feedback_black_64dp"
             android:summary="@string/settings_feed_back_summary">
 
             <intent
@@ -19,11 +35,6 @@
                 android:data="https://github.com/AimerNeige/iLock/issues" />
 
         </Preference>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:title="@string/settings_about">
 
         <Preference
             app:key="author"
